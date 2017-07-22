@@ -12,8 +12,9 @@ namespace BARSViewer
 
         public header hdr = new header();
         public List<byte[]> amtaData = new List<byte[]>();
-        public List<byte[]> fwavData = new List<byte[]>();
+        public List<byte[]> audioData = new List<byte[]>();
         public List<STRG> strgList = new List<STRG>();
+        public List<string> audioIdntr = new List<string>();
 
         public class header
         {
@@ -195,7 +196,8 @@ namespace BARSViewer
             switch(temp2)
             {
                 case "AMTA": br.BaseStream.Position -= 0x4; amtaData.Add(br.ReadBytes(size)); break;
-                case "FWAV": br.BaseStream.Position -= 0x4; fwavData.Add(br.ReadBytes(size)); break;
+                case "FWAV": br.BaseStream.Position -= 0x4; audioData.Add(br.ReadBytes(size)); audioIdntr.Add(".bfwav"); break;
+                case "FSTP": br.BaseStream.Position -= 0x4; audioData.Add(br.ReadBytes(size)); audioIdntr.Add(".bfstp"); break;
                 default: throw new Exception("Unknown chunk: " + temp2);
             }
         }
@@ -203,10 +205,10 @@ namespace BARSViewer
         public void unpack(string file)
         {
             Directory.CreateDirectory(file);
-            for (int i = 0; i < fwavData.Count; i++)
+            for (int i = 0; i < audioData.Count; i++)
             {
-                FileStream f = File.Create(file + "/" + new string(strgList[i].fwavName).Remove(strgList[i].fwavName.Length - 1) + ".bfwav");
-                f.Write(fwavData[i], 0, fwavData[i].Length);
+                FileStream f = File.Create(file + "/" + new string(strgList[i].fwavName).Remove(strgList[i].fwavName.Length - 1) + audioIdntr[i]);
+                f.Write(audioData[i], 0, audioData[i].Length);
                 f.Close();
             }
 
