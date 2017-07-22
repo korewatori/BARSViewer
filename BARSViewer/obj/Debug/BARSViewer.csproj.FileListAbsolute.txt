@@ -1,0 +1,9 @@
+c:\users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\bin\Debug\BARSViewer.exe.config
+c:\users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\bin\Debug\BARSViewer.exe
+c:\users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\bin\Debug\BARSViewer.pdb
+c:\users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\obj\Debug\BARSViewer.csprojResolveAssemblyReference.cache
+c:\users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\obj\Debug\BARSViewer.Properties.Resources.resources
+c:\users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\obj\Debug\BARSViewer.csproj.GenerateResource.Cache
+c:\users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\obj\Debug\BARSViewer.exe
+c:\users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\obj\Debug\BARSViewer.pdb
+C:\Users\ronal\documents\visual studio 2015\Projects\BARSViewer\BARSViewer\obj\Debug\BARSViewer.Form1.resources
