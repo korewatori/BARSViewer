@@ -26,6 +26,8 @@ namespace BARSViewer
             public UInt32 amtaCount;
             public List<UInt32> hashes = new List<UInt32>();
             public List<UInt32> offsets = new List<UInt32>();
+            public List<UInt32> audioOffsets = new List<UInt32>();
+            public List<UInt32> amtaOffsets = new List<UInt32>();
 
             public void parseHeader(BinaryReader br)
             {
@@ -37,9 +39,14 @@ namespace BARSViewer
                 unknown2 = br.ReadByte();
                 amtaCount = br.ReadUInt32();
                 for (int i = 0; i < amtaCount; i++) hashes.Add(br.ReadUInt32());
-                offsets.Add(br.ReadUInt32());
-                while (br.BaseStream.Position < offsets[0]) offsets.Add(br.ReadUInt32());
-                offsets.Sort();
+                UInt32 temp = br.ReadUInt32();
+                offsets.Add(temp);
+                amtaOffsets.Add(temp);
+                while (br.BaseStream.Position < offsets[0])
+                {
+                    audioOffsets.Add(br.ReadUInt32());
+                    amtaOffsets.Add(br.ReadUInt32());
+                }
             }
         }
 
@@ -178,26 +185,44 @@ namespace BARSViewer
 
         private void readEntries(BinaryReader br)
         {
-            for (int i = 0; i < hdr.offsets.Count; i++)
+            for (int i = 0; i < hdr.audioOffsets.Count; i++)
             {
-                int size;
-                if (i != (hdr.offsets.Count - 1)) size = (int)hdr.offsets[i + 1] - (int)hdr.offsets[i];
-                else size = (int)br.BaseStream.Length - (int)hdr.offsets[i];
-                br.BaseStream.Seek(hdr.offsets[i], SeekOrigin.Begin);
-                headerCheck(br, size);
+                br.BaseStream.Seek(hdr.amtaOffsets[i], SeekOrigin.Begin);
+                headerCheck(br);
+
+                br.BaseStream.Seek(hdr.audioOffsets[i], SeekOrigin.Begin);
+                headerCheck(br);
             }
             br.Close();
         }
 
-        private void headerCheck(BinaryReader br, int size)
+        private void headerCheck(BinaryReader br)
         {
+            uint size;
             char[] temp = br.ReadChars(4);
             string temp2 = new string(temp);
             switch(temp2)
             {
-                case "AMTA": br.BaseStream.Position -= 0x4; amtaData.Add(br.ReadBytes(size)); break;
-                case "FWAV": br.BaseStream.Position -= 0x4; audioData.Add(br.ReadBytes(size)); audioIdntr.Add(".bfwav"); break;
-                case "FSTP": br.BaseStream.Position -= 0x4; audioData.Add(br.ReadBytes(size)); audioIdntr.Add(".bfstp"); break;
+                case "AMTA":
+                    br.BaseStream.Seek(0x4, SeekOrigin.Current);
+                    size = br.ReadUInt32();
+                    br.BaseStream.Seek(-0xC, SeekOrigin.Current);
+                    amtaData.Add(br.ReadBytes((int)size));
+                    break;
+                case "FWAV":
+                    br.BaseStream.Seek(0x8, SeekOrigin.Current);
+                    size = br.ReadUInt32();
+                    br.BaseStream.Seek(-0x10, SeekOrigin.Current);
+                    audioData.Add(br.ReadBytes((int)size));
+                    audioIdntr.Add(".bfwav");
+                    break;
+                case "FSTP":
+                    br.BaseStream.Seek(0x8, SeekOrigin.Current);
+                    size = br.ReadUInt32();
+                    br.BaseStream.Seek(-0x10, SeekOrigin.Current);
+                    audioData.Add(br.ReadBytes((int)size));
+                    audioIdntr.Add(".bfstp");
+                    break;
                 default: throw new Exception("Unknown chunk: " + temp2);
             }
         }
