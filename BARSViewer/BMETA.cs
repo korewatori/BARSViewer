@@ -118,13 +118,35 @@ namespace BARSViewer
         {
             public char[] id;
             public UInt32 size;
+            public UInt32 entries;
+            public List<entry> markEntries = new List<entry>();
+
+            public class entry
+            {
+                public UInt32 index;
+                public UInt32 unk1;
+                public UInt32 unk2;
+                public UInt32 unk3;
+            }
 
             public void parseMARK(BinaryReader br)
             {
                 id = br.ReadChars(4);
                 if (new string(id) != "MARK") throw new Exception("MARK chunk is invalid.");
                 size = br.ReadUInt32();
-                br.ReadUInt32();
+                entries = br.ReadUInt32();
+                if (entries != 0)
+                {
+                    for (int i = 0; i < entries; i++)
+                    {
+                        entry ent = new entry();
+                        ent.index = br.ReadUInt32();
+                        ent.unk1 = br.ReadUInt32();
+                        ent.unk2 = br.ReadUInt32();
+                        ent.unk3 = br.ReadUInt32();
+                        markEntries.Add(ent);
+                    }
+                }
             }
         }
 
@@ -132,13 +154,31 @@ namespace BARSViewer
         {
             public char[] id;
             public UInt32 size;
+            public UInt32 entries;
+            public List<entry> extEntries = new List<entry>();
+
+            public class entry
+            {
+                public UInt32 unk1;
+                public UInt32 unk2;
+            }
 
             public void parseEXT_(BinaryReader br)
             {
                 id = br.ReadChars(4);
                 if (new string(id) != "EXT_") throw new Exception("EXT_ chunk is invalid.");
                 size = br.ReadUInt32();
-                br.ReadUInt32();
+                entries = br.ReadUInt32();
+                if (entries != 0)
+                {
+                    for (int i = 0; i < entries; i++)
+                    {
+                        entry ent = new entry();
+                        ent.unk1 = br.ReadUInt32();
+                        ent.unk2 = br.ReadUInt32();
+                        extEntries.Add(ent);
+                    }
+                }
             }
         }
 
@@ -147,6 +187,7 @@ namespace BARSViewer
             public char[] id;
             public UInt32 stringSize;
             public char[] fwavName;
+            public string name;
 
             public void parseSTRG(BinaryReader br)
             {
@@ -154,6 +195,10 @@ namespace BARSViewer
                 if (new string(id) != "STRG") throw new Exception("STRG chunk is invalid.");
                 stringSize = br.ReadUInt32();
                 fwavName = br.ReadChars((int)stringSize);
+                char[] sep = { (char)0x00 };
+                string temp = new string(fwavName);
+                string[] temp2 = temp.Split(sep);
+                name = temp2[0];
             }
         }
 
@@ -232,7 +277,7 @@ namespace BARSViewer
             Directory.CreateDirectory(file);
             for (int i = 0; i < audioData.Count; i++)
             {
-                FileStream f = File.Create(file + "/" + new string(strgList[i].fwavName).Remove(strgList[i].fwavName.Length - 1) + audioIdntr[i]);
+                FileStream f = File.Create(file + "/" + strgList[i].name + audioIdntr[i]);
                 f.Write(audioData[i], 0, audioData[i].Length);
                 f.Close();
             }
@@ -240,7 +285,7 @@ namespace BARSViewer
             Directory.CreateDirectory(file + "/meta");
             for (int i = 0; i < amtaData.Count; i++)
             {
-                FileStream f = File.Create(file + "/meta/" + new string(strgList[i].fwavName).Remove(strgList[i].fwavName.Length - 1) + ".bamta");
+                FileStream f = File.Create(file + "/meta/" + strgList[i].name + ".bamta");
                 f.Write(amtaData[i], 0, amtaData[i].Length);
                 f.Close();
             }
