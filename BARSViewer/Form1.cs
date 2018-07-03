@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using VGAudio;
 
 namespace BARSViewer
 {
@@ -28,6 +29,7 @@ namespace BARSViewer
 
             listBox1.Items.Clear();
             button1.Enabled = true;
+            previewButton.Enabled = true;
 
             for (int i = 0; i < bmta.strgList.Count; i++)
             {
