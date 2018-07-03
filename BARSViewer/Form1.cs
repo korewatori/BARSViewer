@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using VGAudio;
 
 namespace BARSViewer
 {
@@ -29,7 +28,7 @@ namespace BARSViewer
 
             listBox1.Items.Clear();
             button1.Enabled = true;
-            previewButton.Enabled = true;
+            extractWavButton.Enabled = true;
 
             for (int i = 0; i < bmta.strgList.Count; i++)
             {
@@ -46,6 +45,12 @@ namespace BARSViewer
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("BARS Viewer 0.1 by MasterF0x", "About");
+        }
+
+        private void extractWavButton_Click(object sender, EventArgs e)
+        {
+            bmta.unpackWav(openFileDialog1.FileName.Replace(".bars", ""));
+            MessageBox.Show("Done.");
         }
     }
 }

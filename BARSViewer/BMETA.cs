@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using VGAudio;
 
 namespace BARSViewer
 {
@@ -287,6 +288,17 @@ namespace BARSViewer
             {
                 FileStream f = File.Create(file + "/meta/" + strgList[i].name + ".bamta");
                 f.Write(amtaData[i], 0, amtaData[i].Length);
+                f.Close();
+            }
+        }
+        public void unpackWav(string file)
+        {
+            Directory.CreateDirectory(file);
+            for (int i = 0; i < amtaData.Count; i++)
+            {
+                FileStream f = File.Create(file + "/" + strgList[i].name + ".NONFUNCTIONAL.wav");
+                // byte[] tempData = audioData[i];             
+                f.Write(audioData[i], 0, audioData[i].Length);
                 f.Close();
             }
         }
