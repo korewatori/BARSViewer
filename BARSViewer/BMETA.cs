@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using VGAudio;
+using VGAudio.Containers.NintendoWare;
+using VGAudio.Containers.Wave;
 
 namespace BARSViewer
 {
@@ -296,9 +297,11 @@ namespace BARSViewer
             Directory.CreateDirectory(file);
             for (int i = 0; i < amtaData.Count; i++)
             {
-                FileStream f = File.Create(file + "/" + strgList[i].name + ".NONFUNCTIONAL.wav");
-                // byte[] tempData = audioData[i];             
-                f.Write(audioData[i], 0, audioData[i].Length);
+                FileStream f = File.Create(file + "/" + strgList[i].name + ".wav");
+                BCFstmReader reader = new BCFstmReader();
+
+                WaveWriter writer = new WaveWriter();
+                writer.WriteToStream(reader.Read(audioData[i]), f);         
                 f.Close();
             }
         }
