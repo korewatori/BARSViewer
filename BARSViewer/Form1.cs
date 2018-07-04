@@ -50,7 +50,7 @@ namespace BARSViewer
         private void extractWavButton_Click(object sender, EventArgs e)
         {
             bmta.unpackWav(openFileDialog1.FileName.Replace(".bars", ""));
-            MessageBox.Show("Done.");
+            MessageBox.Show("Converted all compatible formats.");
         }
     }
 }

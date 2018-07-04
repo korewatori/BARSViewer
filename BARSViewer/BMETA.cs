@@ -297,12 +297,16 @@ namespace BARSViewer
             Directory.CreateDirectory(file);
             for (int i = 0; i < amtaData.Count; i++)
             {
-                FileStream f = File.Create(file + "/" + strgList[i].name + ".wav");
-                BCFstmReader reader = new BCFstmReader();
+                if (audioIdntr[i] == ".bfwav" || audioIdntr[i] == ".bfstp" || audioIdntr[i] == ".bfstm")
+                {
 
-                WaveWriter writer = new WaveWriter();
-                writer.WriteToStream(reader.Read(audioData[i]), f);         
-                f.Close();
+                    FileStream f = File.Create(file + "/" + strgList[i].name + ".wav");
+                    BCFstmReader reader = new BCFstmReader();
+                    WaveWriter writer = new WaveWriter();
+                    VGAudio.Formats.AudioData convertedWav = reader.Read(audioData[i]);
+                    writer.WriteToStream(convertedWav, f);
+                    f.Close();
+                }
             }
         }
     }
