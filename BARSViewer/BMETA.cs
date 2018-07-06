@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using VGAudio.Containers.NintendoWare;
+using VGAudio.Containers.Wave;
 
 namespace BARSViewer
 {
@@ -288,6 +290,23 @@ namespace BARSViewer
                 FileStream f = File.Create(file + "/meta/" + strgList[i].name + ".bamta");
                 f.Write(amtaData[i], 0, amtaData[i].Length);
                 f.Close();
+            }
+        }
+        public void unpackWav(string file)
+        {
+            Directory.CreateDirectory(file);
+            for (int i = 0; i < amtaData.Count; i++)
+            {
+                if (audioIdntr[i] == ".bfwav" || audioIdntr[i] == ".bfstp" || audioIdntr[i] == ".bfstm")
+                {
+
+                    FileStream f = File.Create(file + "/" + strgList[i].name + ".wav");
+                    BCFstmReader reader = new BCFstmReader();
+                    WaveWriter writer = new WaveWriter();
+                    VGAudio.Formats.AudioData convertedWav = reader.Read(audioData[i]);
+                    writer.WriteToStream(convertedWav, f);
+                    f.Close();
+                }
             }
         }
     }

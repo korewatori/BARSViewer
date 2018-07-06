@@ -28,6 +28,7 @@ namespace BARSViewer
 
             listBox1.Items.Clear();
             button1.Enabled = true;
+            extractWavButton.Enabled = true;
 
             for (int i = 0; i < bmta.strgList.Count; i++)
             {
@@ -44,6 +45,12 @@ namespace BARSViewer
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("BARS Viewer 0.1 by MasterF0x", "About");
+        }
+
+        private void extractWavButton_Click(object sender, EventArgs e)
+        {
+            bmta.unpackWav(openFileDialog1.FileName.Replace(".bars", ""));
+            MessageBox.Show("Converted all compatible formats.");
         }
     }
 }
