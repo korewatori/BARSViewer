@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using NAudio.Wave;
 using VGAudio.Containers.NintendoWare;
 using VGAudio.Containers.Wave;
 
@@ -79,16 +80,14 @@ namespace BARSViewer
 
         public class DATA
         {
+            // 32 bit = 4 byte
+            // 64 bit = 8 byte
+            // 16 bit = 2 byte
             public char[] id;
             public UInt32 size;
-            public UInt64 unknown1;
-            public UInt16 unknown2;
-            public UInt16 unknown3;
-            public UInt32 unknown4;
-            public UInt32 unknown5;
-            public UInt32 unknown6;
-            public UInt32 unknown7;
-            public UInt64 unknown8;
+            
+            // There's no point in reading the unknowns
+
             // Floating-point stuff
             public float[] f1;
             public UInt32[] u1;
@@ -98,14 +97,9 @@ namespace BARSViewer
                 id = br.ReadChars(4);
                 if (new string(id) != "DATA") throw new Exception("DATA chunk is invalid.");
                 size = br.ReadUInt32();
-                unknown1 = br.ReadUInt64();
-                unknown2 = br.ReadUInt16();
-                unknown3 = br.ReadUInt16();
-                unknown4 = br.ReadUInt32();
-                unknown5 = br.ReadUInt32();
-                unknown6 = br.ReadUInt32();
-                unknown7 = br.ReadUInt32();
-                unknown8 = br.ReadUInt64();
+                // Skips the 36 bytes of unknowns
+                br.BaseStream.Position += 36;
+
                 f1 = new float[8];
                 u1 = new UInt32[8];
                 for (int i = 0; i < 8; i++)
@@ -299,7 +293,6 @@ namespace BARSViewer
             {
                 if (audioIdntr[i] == ".bfwav" || audioIdntr[i] == ".bfstp" || audioIdntr[i] == ".bfstm")
                 {
-
                     FileStream f = File.Create(file + "/" + strgList[i].name + ".wav");
                     BCFstmReader reader = new BCFstmReader();
                     WaveWriter writer = new WaveWriter();
@@ -308,6 +301,23 @@ namespace BARSViewer
                     f.Close();
                 }
             }
+        }
+
+        public Stream unpackWavStream(string file)
+        {
+            for (int i = 0; i < amtaData.Count; i++)
+            {
+                if ((audioIdntr[i] == ".bfwav" || audioIdntr[i] == ".bfstp" || audioIdntr[i] == ".bfstm") && strgList[i].name == file)
+                {
+                    Stream f = new MemoryStream();
+                    BCFstmReader reader = new BCFstmReader();
+                    WaveWriter writer = new WaveWriter();
+                    VGAudio.Formats.AudioData convertedWav = reader.Read(audioData[i]);
+                    writer.WriteToStream(convertedWav, f);
+                    return f;
+                }
+            }
+            return null;
         }
     }
 }

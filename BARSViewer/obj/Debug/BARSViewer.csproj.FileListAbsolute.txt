@@ -20,3 +20,5 @@ C:\Users\Sam\Source\Repos\BARSViewer\BARSViewer\obj\Debug\BARSViewer.csproj.Core
 C:\Users\Sam\Source\Repos\BARSViewer\BARSViewer\obj\Debug\BARSViewer.csproj.CopyComplete
 C:\Users\Sam\Source\Repos\BARSViewer\BARSViewer\obj\Debug\BARSViewer.exe
 C:\Users\Sam\Source\Repos\BARSViewer\BARSViewer\obj\Debug\BARSViewer.pdb
+C:\Users\Sam\source\repos\BARSViewer\BARSViewer\bin\Debug\NAudio.dll
+C:\Users\Sam\source\repos\BARSViewer\BARSViewer\bin\Debug\NAudio.xml
