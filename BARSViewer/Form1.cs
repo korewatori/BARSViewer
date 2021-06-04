@@ -50,7 +50,7 @@ namespace BARSViewer
 
         private void AboutMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("BARS Viewer 0.1 by MasterF0x and Sam Poulton", "About");
+            MessageBox.Show("BARS Viewer v0.1 fork by korewatori, originally by MasterF0x and Sam Poulton", "About");
         }
 
         private void ExtractWavButton_Click(object sender, EventArgs e)
